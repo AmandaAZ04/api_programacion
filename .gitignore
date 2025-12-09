@@ -1,0 +1,13 @@
+auxiliares/__pycache__/__init__.cpython-311.pyc
+auxiliares/__pycache__/data_api.cpython-311.pyc
+datos/__pycache__/__init__.cpython-311.pyc
+datos/__pycache__/conexion.cpython-311.pyc
+modelos/__pycache__/__init__.cpython-311.pyc
+modelos/__pycache__/modelos.cpython-311.pyc
+negocio/__pycache__/__init__.cpython-311.pyc
+negocio/__pycache__/encriptacion.cpython-311.pyc
+negocio/__pycache__/negocio_todos.cpython-311.pyc
+negocio/__pycache__/negocio_users.cpython-311.pyc
+servicios/__pycache__/__init__.cpython-311.pyc
+negocio/__pycache__/procesador.cpython-311.pyc
+servicios/__pycache__/api_client.cpython-311.pyc
