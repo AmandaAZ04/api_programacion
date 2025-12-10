@@ -1,55 +1,54 @@
+# negocio/auth.py
+
 from sqlalchemy import text
 from datos.conexion import session
 from negocio.encriptacion import Encriptador
 import stdiomask
-
 from negocio.validaciones import (
-    validar_nombre,
-    validar_email,
-    validar_telefono,
-    validar_username,
-    validar_no_vacio
+    validar_nombre, validar_username, validar_email,
+    validar_telefono, validar_no_vacio
 )
 
 enc = Encriptador()
 
-def login():
-    print("\n--- LOGIN ---")
+# ==========================
+# LOGIN
+# ==========================
 
-    # 1) VALIDAR QUE EL USUARIO EXISTA EN TABLA USERS
+def login():
+    print("\n=== LOGIN ===")
+
+    # 1) Ver si existe en USERS
     while True:
         username = input("Usuario: ")
 
         if not validar_no_vacio(username, "Usuario"):
             continue
 
-        # Buscar username en tabla users de la API/local
         row_user = session.execute(
-            text("SELECT id, username FROM users WHERE username = :u"),
+            text("SELECT id FROM users WHERE username = :u"),
             {"u": username}
         ).fetchone()
 
         if row_user:
-            print("Usuario encontrado\n")
             break
         else:
-            print("Ese usuario NO existe en la tabla USERS")
-            print("   Intente nuevamente\n")
+            print("❌ Ese usuario no existe en USERS.")
+            return False
 
-    # 2) BUSCAR CONTRASEÑA DEL USUARIO EN TABLA USUARIOS
+    # 2) Buscar contraseña en tabla USUARIOS
     row_login = session.execute(
         text("SELECT contrasena, sal FROM usuarios WHERE username = :u"),
         {"u": username}
     ).fetchone()
 
     if not row_login:
-        print("Este usuario existe en USERS pero no tiene contraseña registrada")
-        print("Regístrelo primero\n")
+        print("❌ Este usuario no tiene contraseña registrada.")
         return False
 
     hash_guardado, salt = row_login
 
-    # 3) VALIDAR CONTRASEÑA (pedir hasta que sea correcta)
+    # 3) Verificar contraseña
     while True:
         password = stdiomask.getpass("Contraseña: ")
 
@@ -57,55 +56,53 @@ def login():
             continue
 
         if enc.comparar(password, salt, hash_guardado):
-            print("Login exitoso\n")
+            print("✔ Login exitoso.\n")
             return True
         else:
-            print("Contraseña incorrecta. Intente nuevamente\n")
+            print("❌ Contraseña incorrecta.\n")
 
-# REGISTRO DE USUARIO (CON VALIDACIONES COMPLETAS)
+# ==========================
+# REGISTRO
+# ==========================
+
 def registrar_usuario():
-    print("\n--- REGISTRO DE USUARIO ---")
+    print("\n=== REGISTRO DE USUARIO ===")
 
-    # VALIDAR NOMBRE COMPLETO
+    # VALIDACIONES
     while True:
         name = input("Nombre completo: ")
         if validar_nombre(name):
             break
 
-    # VALIDAR USERNAME
     while True:
         username = input("Username: ")
         if validar_username(username):
             break
 
-    # VALIDAR EMAIL
     while True:
         email = input("Email: ")
         if validar_email(email):
             break
 
-    # VALIDAR TELÉFONO
     while True:
         phone = input("Teléfono: ")
         if validar_telefono(phone):
             break
 
-    # VALIDAR CONTRASEÑA
     while True:
         password = stdiomask.getpass("Contraseña: ")
         if validar_no_vacio(password, "Contraseña"):
             break
 
-    # HASH + SAL
     salt = enc.generar_salt()
     hash_pwd = enc.encriptar(password, salt)
 
-    # GENERAR NUEVO ID
+    # GENERAR ID AUTOMÁTICO
     row = session.execute(text("SELECT MAX(id) FROM users")).fetchone()
     next_id = (row[0] or 0) + 1
 
+    # GUARDAR USERS
     try:
-        # GUARDAR EN TABLA USERS
         session.execute(
             text("""
                 INSERT INTO users (id, name, username, email, phone, website)
@@ -114,7 +111,7 @@ def registrar_usuario():
             {"id": next_id, "n": name, "u": username, "e": email, "p": phone}
         )
 
-        # GUARDAR EN TABLA USUARIOS (LOGIN)
+        # GUARDAR USUARIOS (login)
         session.execute(
             text("""
                 INSERT INTO usuarios (username, email, contrasena, sal)
@@ -124,7 +121,7 @@ def registrar_usuario():
         )
 
         session.commit()
-        print("\n✔ Usuario registrado correctamente.\n")
+        print("✔ Usuario registrado correctamente.\n")
 
     except Exception as e:
-        print("✘ Error registrando usuario:", e)
+        print("❌ Error registrando usuario:", e)

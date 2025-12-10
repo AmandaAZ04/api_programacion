@@ -11,3 +11,7 @@ negocio/__pycache__/negocio_users.cpython-311.pyc
 servicios/__pycache__/__init__.cpython-311.pyc
 negocio/__pycache__/procesador.cpython-311.pyc
 servicios/__pycache__/api_client.cpython-311.pyc
+negocio/__pycache__/auth.cpython-311.pyc
+negocio/__pycache__/crud_todos.cpython-311.pyc
+negocio/__pycache__/crud_users.cpython-311.pyc
+negocio/__pycache__/validaciones.cpython-311.pyc

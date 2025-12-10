@@ -1,18 +1,18 @@
+# negocio/negocio_todos.py
+
 import requests
 from prettytable import PrettyTable
 from datos.conexion import session
 from modelos.modelos import Todo
 
-# GET TODOS desde API
 def obtener_todos_api(url):
-    tabla = PrettyTable()
-    tabla.field_names = ['ID', 'UserID', 'Título', 'Completado']
+    tabla = PrettyTable(["ID", "UserID", "Título", "Completado"])
 
     try:
         resp = requests.get(url, timeout=10)
         resp.raise_for_status()
     except Exception as e:
-        print("Error al obtener todos:", e)
+        print("❌ Error al obtener todos:", e)
         return None
 
     todos_json = resp.json()
@@ -28,10 +28,9 @@ def obtener_todos_api(url):
     print(tabla)
     return todos_json
 
-# Guardar TODOS en BD
 def guardar_todos_db(todos_json):
     if not todos_json:
-        print("No hay tareas para guardar")
+        print("No hay todos para guardar.")
         return
 
     for t in todos_json:
@@ -45,4 +44,4 @@ def guardar_todos_db(todos_json):
         session.merge(Todo(**data))
 
     session.commit()
-    print("Todos guardados en la base de datos correctamente")
+    print("✔ Todos guardados en BD")

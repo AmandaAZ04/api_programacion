@@ -1,4 +1,4 @@
 sqlalchemy
 mysql-connector-python
-prettytable
 requests
+prettytable

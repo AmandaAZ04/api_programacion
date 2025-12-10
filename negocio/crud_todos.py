@@ -1,3 +1,5 @@
+# negocio/crud_todos.py
+
 from sqlalchemy import text
 from datos.conexion import session
 from servicios.api_client import APIClient
@@ -5,7 +7,7 @@ from servicios.api_client import APIClient
 client = APIClient("https://jsonplaceholder.typicode.com")
 
 def crear_todo():
-    print("\n--- CREAR TODO ---")
+    print("\n=== CREAR TODO ===")
 
     userId = input("UserID: ")
     title = input("Título: ")
@@ -14,10 +16,6 @@ def crear_todo():
     data = {"userId": int(userId), "title": title, "completed": completed}
 
     resp = client.post("/todos", data)
-    if resp["ok"]:
-        print("Creado en API")
-    else:
-        print(f"Error API: {resp['status']} → {resp['error']}")
 
     row = session.execute(text("SELECT MAX(id) FROM todos")).fetchone()
     next_id = (row[0] or 0) + 1
@@ -30,21 +28,17 @@ def crear_todo():
         {"id": next_id, "u": userId, "t": title, "c": completed}
     )
     session.commit()
-    print("Guardado en BD")
+
+    print("✔ Guardado en API + Base de Datos")
 
 def actualizar_todo():
-    print("\n--- ACTUALIZAR TODO ---")
-
+    print("\n=== ACTUALIZAR TODO ===")
     todo_id = input("ID: ")
+
     title = input("Nuevo título: ")
     completed = input("¿Completado? (s/n): ").lower() == "s"
 
     resp = client.put(f"/todos/{todo_id}", {"title": title, "completed": completed})
-
-    if resp["ok"]:
-        print("Actualizado en API")
-    else:
-        print(f"Error API: {resp['status']} → {resp['error']}")
 
     session.execute(
         text("""
@@ -55,22 +49,19 @@ def actualizar_todo():
         {"id": todo_id, "t": title, "c": completed}
     )
     session.commit()
-    print("Actualizado en BD")
+
+    print("✔ Actualizado en API + BD")
 
 def eliminar_todo():
-    print("\n--- ELIMINAR TODO ---")
-
+    print("\n=== ELIMINAR TODO ===")
     todo_id = input("ID: ")
 
     resp = client.delete(f"/todos/{todo_id}")
-    if resp["ok"]:
-        print("Eliminado en API")
-    else:
-        print(f"Error API: {resp['status']} → {resp['error']}")
 
     session.execute(
         text("DELETE FROM todos WHERE id = :id"),
         {"id": todo_id}
     )
     session.commit()
-    print("Eliminado de BD")
+
+    print("✔ Eliminado en API + BD")
