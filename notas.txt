@@ -1,0 +1,13 @@
+1. GET:
+200 OK:
+https://jsonplaceholder.typicode.com/users
+
+Error 404 – Recurso no existe:
+https://jsonplaceholder.typicode.com/users/999999
+
+2. POST:
+201 Created:
+https://jsonplaceholder.typicode.com/posts
+
+3. DELETE:
+https://jsonplaceholder.typicode.com/todos/1
