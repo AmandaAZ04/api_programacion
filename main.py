@@ -154,4 +154,8 @@ def menu():
 
 
 if __name__ == "__main__":
-    menu()
+    try:
+        menu()
+    except KeyboardInterrupt:
+        print("\n\nInterrupción detectada (Ctrl + C).")
+        print("El programa se cerró de forma segura.\n")
