@@ -3,9 +3,7 @@ from prettytable import PrettyTable
 from datos.conexion import session
 from modelos.modelos import Todo
 
-# -------------------------------------------------------
 # GET TODOS desde API
-# -------------------------------------------------------
 def obtener_todos_api(url):
     tabla = PrettyTable()
     tabla.field_names = ['ID', 'UserID', 'Título', 'Completado']
@@ -30,13 +28,10 @@ def obtener_todos_api(url):
     print(tabla)
     return todos_json
 
-
-# -------------------------------------------------------
 # Guardar TODOS en BD
-# -------------------------------------------------------
 def guardar_todos_db(todos_json):
     if not todos_json:
-        print("No hay tareas para guardar.")
+        print("No hay tareas para guardar")
         return
 
     for t in todos_json:
@@ -50,4 +45,4 @@ def guardar_todos_db(todos_json):
         session.merge(Todo(**data))
 
     session.commit()
-    print("Todos guardados en la base de datos correctamente.")
+    print("Todos guardados en la base de datos correctamente")

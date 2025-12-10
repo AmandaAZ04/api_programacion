@@ -4,7 +4,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-# MODELO USER (de la API)
 class User(Base):
     __tablename__ = 'users'
 
@@ -21,8 +20,6 @@ class User(Base):
     def __repr__(self):
         return f"<User id={self.id}, username='{self.username}'>"
 
-
-# MODELO todo (tareas)
 class Todo(Base):
     __tablename__ = 'todos'
 

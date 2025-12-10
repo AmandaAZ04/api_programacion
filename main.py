@@ -8,7 +8,6 @@ from negocio.negocio_todos import obtener_todos_api, guardar_todos_db
 from datos.conexion import session
 from sqlalchemy import text
 
-
 def ver_users():
     users_json = obtener_users_api("https://jsonplaceholder.typicode.com/users")
     if users_json:
@@ -27,7 +26,6 @@ def ver_users():
 
     print(tabla)
 
-
 def ver_todos():
     todos_json = obtener_todos_api("https://jsonplaceholder.typicode.com/todos")
     if todos_json:
@@ -45,7 +43,6 @@ def ver_todos():
         tabla.add_row([r[0], r[1], r[2], "Sí" if r[3] else "No"])
 
     print(tabla)
-
 
 def menu():
     while True:
@@ -81,7 +78,6 @@ def menu():
         elif op == "9": ver_todos()
         elif op == "10": break
         else: print("Opción inválida.")
-
 
 if __name__ == "__main__":
     menu()

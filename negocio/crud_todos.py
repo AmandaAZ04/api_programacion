@@ -15,9 +15,9 @@ def crear_todo():
 
     resp = client.post("/todos", data)
     if resp["ok"]:
-        print("✔ Creado en API")
+        print("Creado en API")
     else:
-        print(f"✘ Error API: {resp['status']} → {resp['error']}")
+        print(f"Error API: {resp['status']} → {resp['error']}")
 
     row = session.execute(text("SELECT MAX(id) FROM todos")).fetchone()
     next_id = (row[0] or 0) + 1
@@ -30,8 +30,7 @@ def crear_todo():
         {"id": next_id, "u": userId, "t": title, "c": completed}
     )
     session.commit()
-    print("✔ Guardado en BD.")
-
+    print("Guardado en BD")
 
 def actualizar_todo():
     print("\n--- ACTUALIZAR TODO ---")
@@ -43,9 +42,9 @@ def actualizar_todo():
     resp = client.put(f"/todos/{todo_id}", {"title": title, "completed": completed})
 
     if resp["ok"]:
-        print("✔ Actualizado en API")
+        print("Actualizado en API")
     else:
-        print(f"✘ Error API: {resp['status']} → {resp['error']}")
+        print(f"Error API: {resp['status']} → {resp['error']}")
 
     session.execute(
         text("""
@@ -56,8 +55,7 @@ def actualizar_todo():
         {"id": todo_id, "t": title, "c": completed}
     )
     session.commit()
-    print("✔ Actualizado en BD.")
-
+    print("Actualizado en BD")
 
 def eliminar_todo():
     print("\n--- ELIMINAR TODO ---")
@@ -66,13 +64,13 @@ def eliminar_todo():
 
     resp = client.delete(f"/todos/{todo_id}")
     if resp["ok"]:
-        print("✔ Eliminado en API")
+        print("Eliminado en API")
     else:
-        print(f"✘ Error API: {resp['status']} → {resp['error']}")
+        print(f"Error API: {resp['status']} → {resp['error']}")
 
     session.execute(
         text("DELETE FROM todos WHERE id = :id"),
         {"id": todo_id}
     )
     session.commit()
-    print("✔ Eliminado de BD.")
+    print("Eliminado de BD")

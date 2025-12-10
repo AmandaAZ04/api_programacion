@@ -3,9 +3,7 @@ from prettytable import PrettyTable
 from datos.conexion import session
 from modelos.modelos import User
 
-# -------------------------------------------------------
 # GET USERS desde API
-# -------------------------------------------------------
 def obtener_users_api(url):
     tabla = PrettyTable()
     tabla.field_names = ['ID', 'Nombre', 'Usuario', 'Email', 'Teléfono']
@@ -31,13 +29,10 @@ def obtener_users_api(url):
     print(tabla)
     return users_json
 
-
-# -------------------------------------------------------
 # Guardar USERS en BD
-# -------------------------------------------------------
 def guardar_users_db(users_json):
     if not users_json:
-        print("No hay users para guardar.")
+        print("No hay users para guardar")
         return
 
     for u in users_json:
@@ -54,4 +49,4 @@ def guardar_users_db(users_json):
         session.merge(User(**data))
 
     session.commit()
-    print("Usuarios guardados en la base de datos correctamente.")
+    print("Usuarios guardados en la base de datos correctamente")
