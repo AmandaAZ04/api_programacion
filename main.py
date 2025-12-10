@@ -18,13 +18,16 @@ from prettytable import PrettyTable
 # ==============================
 
 def ver_users():
-    print("\n=== OBTENIENDO USERS DESDE API ===")
+    print("\n=== ACTUALIZANDO USERS DESDE LA API ===")
     users_json = obtener_users_api("https://jsonplaceholder.typicode.com/users")
 
     if users_json:
         guardar_users_db(users_json)
 
-    print("\n=== USERS EN LA BASE DE DATOS ===")
+    # ───────────────────────────────────────────────
+    # SOLO UNA TABLA: USERS GUARDADOS EN TU BASE DE DATOS
+    # ───────────────────────────────────────────────
+    print("\n=== USERS EN BASE DE DATOS (API + TUS REGISTROS) ===")
 
     rows = session.execute(
         text("SELECT id, name, username, email, phone FROM users ORDER BY id")

@@ -61,47 +61,48 @@ def login():
         else:
             print("❌ Contraseña incorrecta.\n")
 
-# ==========================
-# REGISTRO
-# ==========================
-
 def registrar_usuario():
     print("\n=== REGISTRO DE USUARIO ===")
 
-    # VALIDACIONES
+    # ========== VALIDACIONES DEL NOMBRE ==========
     while True:
         name = input("Nombre completo: ")
         if validar_nombre(name):
             break
 
+    # ========== VALIDACIONES DEL USERNAME ==========
     while True:
         username = input("Username: ")
         if validar_username(username):
             break
 
+    # ========== VALIDACIONES DEL EMAIL ==========
     while True:
         email = input("Email: ")
         if validar_email(email):
             break
 
+    # ========== VALIDACIONES DEL TELÉFONO ==========
     while True:
         phone = input("Teléfono: ")
         if validar_telefono(phone):
             break
 
+    # ========== CONTRASEÑA ENMASCARADA ==========
     while True:
         password = stdiomask.getpass("Contraseña: ")
         if validar_no_vacio(password, "Contraseña"):
             break
 
+    # ========== ENCRIPTACIÓN ==========
     salt = enc.generar_salt()
     hash_pwd = enc.encriptar(password, salt)
 
-    # GENERAR ID AUTOMÁTICO
+    # ========== OBTENER SIGUIENTE ID ==========
     row = session.execute(text("SELECT MAX(id) FROM users")).fetchone()
     next_id = (row[0] or 0) + 1
 
-    # GUARDAR USERS
+    # ========== INSERTAR EN USERS ==========
     try:
         session.execute(
             text("""
@@ -111,7 +112,7 @@ def registrar_usuario():
             {"id": next_id, "n": name, "u": username, "e": email, "p": phone}
         )
 
-        # GUARDAR USUARIOS (login)
+        # ========== INSERTAR EN USUARIOS (LOGIN) ==========
         session.execute(
             text("""
                 INSERT INTO usuarios (username, email, contrasena, sal)
@@ -121,7 +122,26 @@ def registrar_usuario():
         )
 
         session.commit()
-        print("✔ Usuario registrado correctamente.\n")
+        print("\n✔ Usuario registrado correctamente.\n")
 
     except Exception as e:
         print("❌ Error registrando usuario:", e)
+        return
+
+    # =====================================================================
+    # MOSTRAR TABLA COMPLETA: USERS DE API + USUARIOS REGISTRADOS POR TI
+    # =====================================================================
+
+    print("=== USERS ACTUALIZADOS (API + TUS REGISTROS) ===")
+
+    rows = session.execute(
+        text("SELECT id, name, username, email, phone FROM users ORDER BY id")
+    ).fetchall()
+
+    from prettytable import PrettyTable
+    tabla = PrettyTable(["ID", "Nombre", "Username", "Email", "Teléfono"])
+
+    for r in rows:
+        tabla.add_row([r[0], r[1], r[2], r[3], r[4]])
+
+    print(tabla)
