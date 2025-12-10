@@ -7,14 +7,49 @@ client = APIClient("https://jsonplaceholder.typicode.com")
 def crear_todo():
     print("\n=== CREAR TODO ===")
 
-    userId = input("UserID: ")
-    title = input("Título: ")
-    completed = input("¿Completado? (s/n): ").lower() == "s"
+    userId = input("UserID: ").strip()
+    title = input("Título: ").strip()
+    completed_input = input("¿Completado? (s/n): ").lower().strip()
 
-    data = {"userId": int(userId), "title": title, "completed": completed}
+    # VALIDACIONES
+    # Validar userId no vacío
+    if not userId:
+        print("Recurso no creado: falta UserID.")
+        return
 
+    # Validar que userId sea número
+    if not userId.isdigit():
+        print("Recurso no creado: UserID debe ser un número.")
+        return
+
+    # Validar título no vacío
+    if not title:
+        print("Recurso no creado: falta Título.")
+        return
+
+    # Validar completado
+    if completed_input not in ("s", "n"):
+        print("Recurso no creado: respuesta inválida en 'completado'.")
+        return
+
+    completed = completed_input == "s"
+
+    # SI todo ES VÁLIDO, CONTINUAMOS
+    data = {
+        "userId": int(userId),
+        "title": title,
+        "completed": completed
+    }
+
+    # Intento de creación en API
     resp = client.post("/todos", data)
 
+    # Manejo de error en API
+    if not resp["ok"]:
+        print(f"Error en API: {resp['error']}")
+        return
+
+    # Guardar en BD con ID incremental
     row = session.execute(text("SELECT MAX(id) FROM todos")).fetchone()
     next_id = (row[0] or 0) + 1
 
@@ -27,7 +62,8 @@ def crear_todo():
     )
     session.commit()
 
-    print("Guardado en API + Base de Datos")
+    print("TODO creado correctamente en API + BD")
+
 
 def actualizar_todo():
     print("\n=== ACTUALIZAR TODO ===")
