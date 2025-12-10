@@ -1,5 +1,3 @@
-# negocio/negocio_todos.py
-
 import requests
 from prettytable import PrettyTable
 from datos.conexion import session
@@ -12,7 +10,7 @@ def obtener_todos_api(url):
         resp = requests.get(url, timeout=10)
         resp.raise_for_status()
     except Exception as e:
-        print("❌ Error al obtener todos:", e)
+        print("Error al obtener todos:", e)
         return None
 
     todos_json = resp.json()
@@ -44,4 +42,4 @@ def guardar_todos_db(todos_json):
         session.merge(Todo(**data))
 
     session.commit()
-    print("✔ Todos guardados en BD")
+    print("Todos guardados en BD")

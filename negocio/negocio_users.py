@@ -1,5 +1,3 @@
-# negocio/negocio_users.py
-
 import requests
 from prettytable import PrettyTable
 from datos.conexion import session
@@ -12,7 +10,7 @@ def obtener_users_api(url):
         resp = requests.get(url, timeout=10)
         resp.raise_for_status()
     except Exception as e:
-        print("❌ Error al obtener users:", e)
+        print("Error al obtener users:", e)
         return None
 
     users_json = resp.json()
@@ -47,4 +45,4 @@ def guardar_users_db(users_json):
         session.merge(User(**data))
 
     session.commit()
-    print("✔ Users guardados en BD")
+    print("Users guardados en BD")

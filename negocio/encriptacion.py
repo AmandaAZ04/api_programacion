@@ -1,5 +1,3 @@
-# negocio/encriptacion.py
-
 import os
 import hashlib
 import binascii

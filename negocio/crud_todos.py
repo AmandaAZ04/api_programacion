@@ -1,5 +1,3 @@
-# negocio/crud_todos.py
-
 from sqlalchemy import text
 from datos.conexion import session
 from servicios.api_client import APIClient
@@ -29,7 +27,7 @@ def crear_todo():
     )
     session.commit()
 
-    print("✔ Guardado en API + Base de Datos")
+    print("Guardado en API + Base de Datos")
 
 def actualizar_todo():
     print("\n=== ACTUALIZAR TODO ===")
@@ -50,7 +48,7 @@ def actualizar_todo():
     )
     session.commit()
 
-    print("✔ Actualizado en API + BD")
+    print("Actualizado en API + BD")
 
 def eliminar_todo():
     print("\n=== ELIMINAR TODO ===")
@@ -64,4 +62,4 @@ def eliminar_todo():
     )
     session.commit()
 
-    print("✔ Eliminado en API + BD")
+    print("Eliminado en API + BD")

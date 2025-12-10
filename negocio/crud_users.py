@@ -1,5 +1,3 @@
-# negocio/crud_users.py
-
 from sqlalchemy import text
 from datos.conexion import session
 
@@ -14,7 +12,7 @@ def actualizar_usuario():
     ).fetchone()
 
     if not row:
-        print("❌ Usuario no encontrado.")
+        print("Usuario no encontrado.")
         return
 
     new_name = input("Nuevo nombre (enter para mantener): ") or row[0]
@@ -32,7 +30,7 @@ def actualizar_usuario():
     )
 
     session.commit()
-    print("✔ Usuario actualizado correctamente")
+    print("Usuario actualizado correctamente")
 
 def eliminar_usuario():
     print("\n=== ELIMINAR USUARIO ===")

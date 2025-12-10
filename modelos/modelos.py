@@ -1,15 +1,8 @@
-# modelos/modelos.py
-
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-# Base para todos los modelos
 Base = declarative_base()
-
-# ==============================
-# MODELO: USERS (datos API)
-# ==============================
 
 class User(Base):
     __tablename__ = "users"
@@ -28,10 +21,6 @@ class User(Base):
         return f"<User id={self.id}, username='{self.username}'>"
 
 
-# ==============================
-# MODELO: TODOS (datos API)
-# ==============================
-
 class Todo(Base):
     __tablename__ = "todos"
 
@@ -44,13 +33,9 @@ class Todo(Base):
     user = relationship("User", back_populates="todos")
 
     def __repr__(self):
-        estado = "✓" if self.completed else "✗"
+        estado = "✓" if self.completed else "X"
         return f"<Todo id={self.id}, title='{self.title[:15]}...', completed={estado}>"
 
-
-# ==============================
-# MODELO: USUARIOS (login)
-# ==============================
 
 class Usuario(Base):
     __tablename__ = "usuarios"

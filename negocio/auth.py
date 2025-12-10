@@ -1,24 +1,15 @@
-# negocio/auth.py
-
 from sqlalchemy import text
 from datos.conexion import session
 from negocio.encriptacion import Encriptador
 import stdiomask
-from negocio.validaciones import (
-    validar_nombre, validar_username, validar_email,
-    validar_telefono, validar_no_vacio
-)
+from negocio.validaciones import (validar_nombre, validar_username, validar_email, validar_telefono, validar_no_vacio)
 
 enc = Encriptador()
-
-# ==========================
-# LOGIN
-# ==========================
 
 def login():
     print("\n=== LOGIN ===")
 
-    # 1) Ver si existe en USERS
+    # Ver si existe en USERS
     while True:
         username = input("Usuario: ")
 
@@ -33,22 +24,22 @@ def login():
         if row_user:
             break
         else:
-            print("❌ Ese usuario no existe en USERS.")
+            print("Ese usuario no existe")
             return False
 
-    # 2) Buscar contraseña en tabla USUARIOS
+    # Buscar contraseña en tabla USUARIOS
     row_login = session.execute(
         text("SELECT contrasena, sal FROM usuarios WHERE username = :u"),
         {"u": username}
     ).fetchone()
 
     if not row_login:
-        print("❌ Este usuario no tiene contraseña registrada.")
+        print("Este usuario no tiene contraseña registrada.")
         return False
 
     hash_guardado, salt = row_login
 
-    # 3) Verificar contraseña
+    # Verificar contraseña
     while True:
         password = stdiomask.getpass("Contraseña: ")
 
@@ -56,53 +47,53 @@ def login():
             continue
 
         if enc.comparar(password, salt, hash_guardado):
-            print("✔ Login exitoso.\n")
+            print("Login exitoso.\n")
             return True
         else:
-            print("❌ Contraseña incorrecta.\n")
+            print("Contraseña incorrecta.\n")
 
 def registrar_usuario():
     print("\n=== REGISTRO DE USUARIO ===")
 
-    # ========== VALIDACIONES DEL NOMBRE ==========
+    # VALIDACIONES DEL NOMBRE
     while True:
         name = input("Nombre completo: ")
         if validar_nombre(name):
             break
 
-    # ========== VALIDACIONES DEL USERNAME ==========
+    # USERNAME
     while True:
         username = input("Username: ")
         if validar_username(username):
             break
 
-    # ========== VALIDACIONES DEL EMAIL ==========
+    # EMAIL
     while True:
         email = input("Email: ")
         if validar_email(email):
             break
 
-    # ========== VALIDACIONES DEL TELÉFONO ==========
+    # TELÉFONO
     while True:
         phone = input("Teléfono: ")
         if validar_telefono(phone):
             break
 
-    # ========== CONTRASEÑA ENMASCARADA ==========
+    # CONTRASEÑA ENMASCARADA
     while True:
         password = stdiomask.getpass("Contraseña: ")
         if validar_no_vacio(password, "Contraseña"):
             break
 
-    # ========== ENCRIPTACIÓN ==========
+    # ENCRIPTACIÓN
     salt = enc.generar_salt()
     hash_pwd = enc.encriptar(password, salt)
 
-    # ========== OBTENER SIGUIENTE ID ==========
+    # OBTENER SIGUIENTE ID
     row = session.execute(text("SELECT MAX(id) FROM users")).fetchone()
     next_id = (row[0] or 0) + 1
 
-    # ========== INSERTAR EN USERS ==========
+    # INSERTAR EN USERS
     try:
         session.execute(
             text("""
@@ -112,7 +103,7 @@ def registrar_usuario():
             {"id": next_id, "n": name, "u": username, "e": email, "p": phone}
         )
 
-        # ========== INSERTAR EN USUARIOS (LOGIN) ==========
+        # INSERTAR EN USUARIOS (LOGIN)
         session.execute(
             text("""
                 INSERT INTO usuarios (username, email, contrasena, sal)
@@ -125,13 +116,10 @@ def registrar_usuario():
         print("\n✔ Usuario registrado correctamente.\n")
 
     except Exception as e:
-        print("❌ Error registrando usuario:", e)
+        print("Error registrando usuario:", e)
         return
 
-    # =====================================================================
     # MOSTRAR TABLA COMPLETA: USERS DE API + USUARIOS REGISTRADOS POR TI
-    # =====================================================================
-
     print("=== USERS ACTUALIZADOS (API + TUS REGISTROS) ===")
 
     rows = session.execute(

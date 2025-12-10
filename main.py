@@ -1,21 +1,14 @@
 #pip install -r requirements.txt
 
-# main.py
-
 from negocio.auth import login, registrar_usuario
 from negocio.crud_users import actualizar_usuario, eliminar_usuario
 from negocio.crud_todos import crear_todo, actualizar_todo, eliminar_todo
 from negocio.negocio_users import obtener_users_api, guardar_users_db
 from negocio.negocio_todos import obtener_todos_api, guardar_todos_db
-
 from datos.conexion import session
 from sqlalchemy import text
 from prettytable import PrettyTable
 
-
-# ==============================
-# FUNCIONES DE VISUALIZACIÓN
-# ==============================
 
 def ver_users():
     print("\n=== ACTUALIZANDO USERS DESDE LA API ===")
@@ -24,9 +17,7 @@ def ver_users():
     if users_json:
         guardar_users_db(users_json)
 
-    # ───────────────────────────────────────────────
     # SOLO UNA TABLA: USERS GUARDADOS EN TU BASE DE DATOS
-    # ───────────────────────────────────────────────
     print("\n=== USERS EN BASE DE DATOS (API + TUS REGISTROS) ===")
 
     rows = session.execute(
@@ -60,10 +51,7 @@ def ver_todos():
     print(tabla)
 
 
-# ==============================
 # MENÚ SECUNDARIO (post-login)
-# ==============================
-
 def menu_interno():
     while True:
         print("\n========== MENÚ PRINCIPAL ==========")
@@ -94,13 +82,10 @@ def menu_interno():
             return
 
         else:
-            print("❌ Opción inválida\n")
+            print("Opción inválida\n")
 
 
-# ==============================
 # SUBMENÚ CRUD USERS
-# ==============================
-
 def menu_users():
     while True:
         print("\n--- CRUD USERS ---")
@@ -117,13 +102,10 @@ def menu_users():
         elif op == "3":
             return
         else:
-            print("❌ Opción inválida")
+            print("Opción inválida")
 
 
-# ==============================
 # SUBMENÚ CRUD TODOS
-# ==============================
-
 def menu_todos():
     while True:
         print("\n--- CRUD TODOS ---")
@@ -143,13 +125,10 @@ def menu_todos():
         elif op == "4":
             return
         else:
-            print("❌ Opción inválida")
+            print("Opción inválida")
 
 
-# ==============================
 # MENÚ PRINCIPAL (ANTES DEL LOGIN)
-# ==============================
-
 def menu():
     while True:
         print("\n========== SISTEMA ==========")
@@ -171,10 +150,8 @@ def menu():
             break
 
         else:
-            print("❌ Opción inválida")
+            print("Opción inválida")
 
-
-# ==============================
 
 if __name__ == "__main__":
     menu()

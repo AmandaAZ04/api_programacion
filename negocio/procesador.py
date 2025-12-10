@@ -1,5 +1,3 @@
-# negocio/procesador.py
-
 def resumen_todos_por_usuario(todos_json):
     resumen = {}
 
